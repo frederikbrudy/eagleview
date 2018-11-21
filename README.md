@@ -12,6 +12,8 @@ Cite as: _[Frederik Brudy, Suppachai Suwanwatcharachat, Wenyu Zhang, Steven Houb
 [EagleView at the ACM Digital Library](https://dl.acm.org/citation.cfm?id=3279795) 
 
 [Open access PDF](https://fbrudy.net/projects/eagleview-iss-2018)
+
+[![EagleView Youtube video](https://img.youtube.com/vi/YoB4AXLnJPE/0.jpg)](https://www.youtube.com/watch?v=YoB4AXLnJPE) 
  
 ## Status
 Initial release for ISS'18 talk.
