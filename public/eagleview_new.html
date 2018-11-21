@@ -1,0 +1,596 @@
+<html>
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="javascripts/bootstrap-colorpicker/css/bootstrap-colorpicker.css">
+    <link rel="stylesheet" href="javascripts/bootstrap-slider/bootstrap-slider.css">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/css/bootstrap-slider.min.css">-->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/bootstrap-slider.min.js"></script>-->
+    <script src="javascripts/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+    <script src="javascripts/bootstrap-slider/bootstrap-slider.js"></script>
+    <script src="javascripts/easeljs-0.8.2.min.js"></script>
+    <script src="javascripts/heatmap.js"></script>
+    <script src="javascripts/jquery.slimscroll.min.js"></script>
+    <script src="javascripts/app.js"></script>
+    <link rel="stylesheet" href="stylesheets/app.css">
+    <link rel="stylesheet" href="stylesheets/query.css">
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>-->
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css" rel="stylesheet" type="text/css" />-->
+
+</head>
+<body onload="loadData(1);">
+<div class="container">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#Visualisations" aria-controls="home" role="tab"
+                                                  data-toggle="tab">Visualisations</a></li>
+        <li role="presentation"><a href="#Queries" aria-controls="profile" role="tab" data-toggle="tab">Queries</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="Visualisations">
+            <div class="container">
+                <!-- Tab panes -->
+                <div class="row text-center all" id="loadingIcon">Now Loading...</div>
+                <div class="row">
+                    <div class="subVideo">
+                        <video width="320" height="180" id="video1">
+                            <source src="videos/200_side1.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <video width="320" height="180" id="video2">
+                            <source src="videos/200_side2.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <video width="320" height="180" id="video3">
+                            <source src="videos/200_top.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <video width="320" height="180" id="video4">
+                            <source src="videos/200_eagle.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="mainVideo">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <video width="512" height="424" id="videoOverlay">
+                                    <source src="videos/200_top_small_grey.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <!--<video width="512" height="424" id="videoOverlay2" >
+                                    <source src="videos/200_eagle.mp4" type="video/mp4">
+                                      Your browser does not support the video tag.
+                                </video>-->
+                                <canvas id="easel" width="512" height="424"></canvas>
+                                <canvas id="traceOverlay" width="511" height="423"></canvas>
+                                <div id="overlay"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <span id="frameBox">Frame: <br></span>
+                                Time: <span id="timeBox"></span><br>
+                                <div class="row" id="videoPlayButtonRow">
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-default btn-sm btn-danger"
+                                                id="videoPlayButton">Play
+                                        </button>
+                                        <input type="hidden" id="videoPlayButtonStatus" value="clickToPlay">
+                                        <input type="text" id="videoSeekBar" data-slider-tooltip="hide"
+                                               data-slider-handle="square">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="row">
+                            <ul class="nav nav-tabs nav-justified">
+                                <li class="active" id="preferencesPill"><a href="#">Preferences</a></li>
+                                <li id="summaryViewPill"><a href="#">Summary view</a></li>
+                            </ul>
+                        </div>
+                        <div class="row">
+                            <form id="preferences">
+                                <h4>Overlay</h4>
+                                <div class="row checkbox">
+                                    <label>
+                                        <input type="checkbox" id="videoOverylayCheckbox">Show background video
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6" style="padding-left:35px">
+                                        Opacity: <span id="opacityLabel">100</span>%
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input id="backgroundOpacitySlider" type="text" data-slider-step="5">
+                                    </div>
+                                </div>
+                                <!--
+                                  <div class="checkbox">
+                                  <label>
+                                    <input type="checkbox" id="videoOverylayCheckbox2">Show background proxemic video
+                                  </label>
+                                </div>-->
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="zoneOverlayCheckbox">Show zones
+                                    </label>
+                                </div>
+                                <h4>Distance</h4>
+                                <div class="row">
+                                    <div class="col-sm-7">Person's sight angle (degree)</div>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="inputSightAngle" placeholder="90">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-7">Proxemics distance around body radius (cm)</div>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="inputBodyProxemicDistance"
+                                               placeholder="100">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">Show distance line between</div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control selectDistanceLine" id="distanceLine1From"
+                                                data-id="0" data-type="from">
+                                            <option value="select">Select</option>
+                                            <option value="0" type="person">Person 1</option>
+                                            <option value="1" type="person">Person 2</option>
+                                            <option value="2" type="person">Person 3</option>
+                                            <option value="100" type="object">TV</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control selectDistanceLine" id="distanceLine1To" data-id="0"
+                                                data-type="to">
+                                            <option value="select">Select</option>
+                                            <option value="0" type="person">Person 1</option>
+                                            <option value="1" type="person">Person 2</option>
+                                            <option value="2" type="person">Person 3</option>
+                                            <option value="100" type="object">TV</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row" id="distanceLine2">
+                                    <div class="col-sm-4">Show distance line between</div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control selectDistanceLine" id="distanceLine2From"
+                                                data-id="1" data-type="from">
+                                            <option value="select">Select</option>
+                                            <option value="0" type="person">Person 1</option>
+                                            <option value="1" type="person">Person 2</option>
+                                            <option value="2" type="person">Person 3</option>
+                                            <option value="100" type="object">TV</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control selectDistanceLine" id="distanceLine2To" data-id="1"
+                                                data-type="to">
+                                            <option value="select">Select</option>
+                                            <option value="0" type="person">Person 1</option>
+                                            <option value="1" type="person">Person 2</option>
+                                            <option value="2" type="person">Person 3</option>
+                                            <option value="100" type="object">TV</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row" id="distanceLine3">
+                                    <div class="col-sm-4">Show distance line between</div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control selectDistanceLine" id="distanceLine3From"
+                                                data-id="2" data-type="from">
+                                            <option value="select">Select</option>
+                                            <option value="0" type="person">Person 1</option>
+                                            <option value="1" type="person">Person 2</option>
+                                            <option value="2" type="person">Person 3</option>
+                                            <option value="100" type="object">TV</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control selectDistanceLine" id="distanceLine3To" data-id="2"
+                                                data-type="to">
+                                            <option value="select">Select</option>
+                                            <option value="0" type="person">Person 1</option>
+                                            <option value="1" type="person">Person 2</option>
+                                            <option value="2" type="person">Person 3</option>
+                                            <option value="100" type="object">TV</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <h4>Movement</h4>
+                                <div class="row">
+                                    <div class="col-sm-7">Show past movement for (secs)</div>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="inputBackwardMovementSeconds"
+                                               placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-7">Show future movement for (secs)</div>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="inputForwardMovementSeconds"
+                                               placeholder="3">
+                                    </div>
+                                </div>
+                                <h5>Person 1</h5>
+                                <div class="row subGroup">
+                                    <div class="col-sm-7">Past movement color</div>
+                                    <div class="col-sm-5">
+                                        <div class="input-group colorpicker-component">
+                                            <input type="text" class="form-control" id="person1BackwardMovementColor"
+                                                   value="#000000"><span class="input-group-addon"><i></i>
+		                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row subGroup">
+                                    <div class="col-sm-7">Future movement color</div>
+                                    <div class="col-sm-5">
+                                        <div class="input-group colorpicker-component">
+                                            <input type="text" class="form-control" id="person1ForwardMovementColor"
+                                                   value="#000000"><span class="input-group-addon"><i></i>
+		                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h5>Person 2</h5>
+                                <div class="row subGroup">
+                                    <div class="col-sm-7">Past movement color</div>
+                                    <div class="col-sm-5">
+                                        <div class="input-group colorpicker-component">
+                                            <input type="text" class="form-control" id="person2BackwardMovementColor"
+                                                   value="#000000"><span class="input-group-addon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row subGroup">
+                                    <div class="col-sm-7">Future movement color</div>
+                                    <div class="col-sm-5">
+                                        <div class="input-group colorpicker-component">
+                                            <input type="text" class="form-control" id="person2ForwardMovementColor"
+                                                   value="#000000"><span class="input-group-addon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h5>Person 3</h5>
+                                <div class="row subGroup">
+                                    <div class="col-sm-7">Past movement color</div>
+                                    <div class="col-sm-5">
+                                        <div class="input-group colorpicker-component">
+                                            <input type="text" class="form-control" id="person3BackwardMovementColor"
+                                                   value="#000000"><span class="input-group-addon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row subGroup">
+                                    <div class="col-sm-7">Future movement color</div>
+                                    <div class="col-sm-5">
+                                        <div class="input-group colorpicker-component">
+                                            <input type="text" class="form-control" id="person3ForwardMovementColor"
+                                                   value="#000000"><span class="input-group-addon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4>Groups</h4>
+                                <div class="row">
+                                    <div class="col-sm-7">Group 1 color</div>
+                                    <div class="col-sm-5">
+                                        <div class="input-group colorpicker-component">
+                                            <input type="text" class="form-control" id="group1Color"
+                                                   value="#000000"><span class="input-group-addon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-7">Group 2 color</div>
+                                    <div class="col-sm-5">
+                                        <div class="input-group colorpicker-component">
+                                            <input type="text" class="form-control" id="group2Color"
+                                                   value="#000000"><span class="input-group-addon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <form id="summaryView">
+                                <h4>Select time interval</h4>
+                                <div class="row heatmapSliderDiv">
+                                    <input id="positionHeatMapSlider" type="text" data-slider-tooltip="hide">
+                                    <span id="heatmapStartTime">0:00</span> - <span id="heatmapEndTime">1:10</span>
+                                </div>
+                                <h4>Position Heat Map</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="#" class="overview" data-person-id="0" onclick="return false;">
+                                            <div class="overviewImage" id="heatSample"></div>
+                                            <p class="overviewText">Person 1</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="#" class="overview" data-person-id="1" onclick="return false;">
+                                            <div class="overviewImage" id="heatSample2"></div>
+                                            <p class="overviewText">Person 2</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="#" class="overview" data-person-id="2" onclick="return false;">
+                                            <div class="overviewImage" id="heatSample3"></div>
+                                            <p class="overviewText">Person 3</p>
+                                        </a>
+                                    </div>
+                                    <!--
+                                      <div class="col-md-6">
+                                        <a href="#" class="overview" data-person-id="3" onclick="return false;">
+                                            <div class="overviewImage" id="heatSample4"></div>
+                                            <p class="overviewText">Person 4</p>
+                                        </a>
+                                    </div>-->
+                                </div>
+                                <h4>Movement Trace</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="#" class="trace" data-person-id="0" onclick="return false;">
+                                            <canvas id="traceSample1" class="traceImage" width="153"
+                                                    height="127"></canvas>
+                                            <p class="traceText">Person 1</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="#" class="trace" data-person-id="1" onclick="return false;">
+                                            <canvas id="traceSample2" class="traceImage" width="153"
+                                                    height="127"></canvas>
+                                            <p class="traceText">Person 2</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="#" class="trace" data-person-id="2" onclick="return false;">
+                                            <canvas id="traceSample3" class="traceImage" width="153"
+                                                    height="127"></canvas>
+                                            <p class="traceText">Person 3</p>
+                                        </a>
+                                    </div>
+                                    <!--
+                                      <div class="col-md-6">
+                                        <a href="#" class="overview" data-person-id="3" onclick="return false;">
+                                            <canvas id="traceSample4" width="153" height="127"></canvas>
+                                            <p class="traceText">Person 4</p>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div id="timeline2">
+                        <h2>Annotation TimeLine</h2>
+                    </div>
+                    <div class="annotate">
+                        <h4 class="tag-group">
+                            <a onclick="colabInBox('People are collaborating')">
+                                <span style="padding-bottom: 2px" class="label label-primary ">Collaboration</span>
+                            </a>
+
+                            <a onclick="colabInBox('People are communicating')">
+                                <span style="padding-bottom: 2px" class="label label-primary">Communication</span>
+                            </a>
+                            <a onclick="colabInBox('People are doing work individually')">
+                                <span style="padding-bottom: 2px" class="label label-primary">Individually</span>
+                            </a>
+                        </h4>
+                        <textarea name="commentsfloat" placeholder="Write your comment here!" id="commentsfloat" cols="16"
+                                  rows="6"></textarea>
+
+                        <button type="button" onclick="submitCmntFloating()">Add</button>
+                        <button type="button" onclick="resetCmntFloating()">Reset</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row lastrow">
+                <div class="col-12">
+                    <div data-intro="Filterd results are shown here! You can find when the matched events of you queries happen in the video."
+                         data-step="12" data-position="top" id="timeline">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <h2>Timeline </h2>
+                            </div>
+                            <button style="margin-left: -40px;margin-top: 28px;" onclick="showAllGroups()">Restore Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="Queries">
+            <div class="container">
+                <!-- Tab panes -->
+                <div class="row">
+                    <div class="col-12">
+                        <iframe src="query/EagleViewQueryCase2.html" id="query-frame"></iframe>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+<!--
+        <div role="tabpanel" class="tab-pane" id="Queries">
+            <div style="margin-left: 600px; margin-bottom:-20px" id="checkDraw">
+                <input type="radio" name="action" value="draw" style="opacity:0" checked> Draw
+                <input type="radio" name="action" value="erase" id="erase" style="opacity:0">
+            </div>
+
+            <nav data-intro="In this floating menu, you can jump between video and timelines interface by clicking 'Video' or 'Timeline'. You can also add your annotations with 'Annotation'"
+                 data-step="13" data-position="left" class="floating-menu">
+                <h3>Menu</h3>
+                <a href="#animation">Video</a>
+                <a href="#timeline">Timeline</a>
+                <a href="#false" class="commentBox"
+                   data-intro="Click here to add annotations by typing your own words in the text box or add directly by clicking the provided tags."
+                   data-step="14" onclick="hideFunction()">Annotation</a>
+                <a class="glyphicon glyphicon-question-sign" href="javascript:void(0);"
+                   onclick="javascript:introJs().start();"> Help </a>
+
+            </nav>
+
+            <div id="animation">
+                <video data-intro="Here is your video." data-step="1" id="video1Q" width="582" preload="auto">
+                    <source src="videos/vone.mp4" type="video/mp4">
+                    Your browser doesn't support HTML5 video tag.
+                </video>
+                <canvas data-intro="Once you pause the video, the current video frame is captured here! You can create  queries by adjusting elements on it later."
+                        data-step="4" id="myCanvas" width="582" height="482">Your browser does not support canvas,
+                    please try another browser
+                </canvas>
+                <div id="btnLayer"></div>
+                <canvas data-intro="Remember your queries related to distance, orientation, location, and activity will be generated by your operations on elements here!"
+                        data-step="9" id="cycLayer" width="582" height="482">Your browser does not support canvas,
+                    please try another browser
+                </canvas>
+            </div>
+
+            <div id="videos" class="row">
+                <div class="col-md-6">
+                    <div data-intro="Now let's start!" data-step="15" class="row">
+                        <div class="col-md-1">
+                            <button data-intro="Click here to play videos and click again to pause." data-step="2"
+                                    data-position="top" id="pausecontrol" onclick="Pause()" class="btn btn-primary"><i
+                                    class="glyphicon glyphicon-play"></i></button>
+                        </div>
+                        <div class="col-md-11">
+                            <div data-intro="Slide the slider here to adjust video time." data-step="3"
+                                 data-position="top" id="progress" class="control">
+                                <div id="progress_box">
+                                    <span id="load_progress"><span id="play_progress"></span></span>
+                                </div>
+                                <div id="play_time">
+                                    <span id="current_time_display">00:00</span> / <span id="duration_display"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <video id="video_1" width="280" preload="auto" class="video">
+                        <source src="videos/vtwo.mp4" type="video/mp4">
+                        Your browser doesn't support HTML5 video tag.
+                    </video>
+                    <video id="video_2" width="280" preload="auto" class="video">
+                        <source src="videos/vthree.mp4" type="video/mp4">
+                        Your browser doesn't support HTML5 video tag.
+                    </video>
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div id="inforTab">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#infoView">Information</a></li>
+                            <li><a data-toggle="tab" href="#queryView">Query</a></li>
+                            <li><a data-toggle="tab" href="#commentView">Annotations</a></li>
+                            <div id="opacityS" , class="row">
+                                <div class=" col-md-3">
+                                    <input type="range" min="0" max="100" value="50" step="1"
+                                           onchange="storeValue(this.value)"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <span id="range" style="colour:#4C4C4C; font-size: 90%; margin-left: 0px">Opacity: 50 %</span>
+                                </div>
+                            </div>
+                        </ul>
+
+                        <div id="tabCon" class="tab-content">
+                            <div data-intro="Once you finish operation of any function, you will get one corresponding query here!"
+                                 data-step="10" data-position="top" id="infoView" class=" tab-pane fade in active">
+                                <div class="scroll-pane">
+                                    <p id="showinfo"></p>
+                                </div>
+                            </div>
+
+                            <div id="queryView" class="tab-pane fade, scroll-pane"></div>
+
+                            <div id="commentView" class="tab-pane fade">
+                                <div class="col-md-4" align="left">
+                                    <textarea name="comments" placeholder="Write your comment here!" id="comments"
+                                              cols="19" rows="4"></textarea>
+                                    <button type="button" onclick="submitCmnt()">Add</button>
+                                    <button type="button" onclick="resetCmnt()">Reset</button>
+                                </div>
+
+                                <div id="recordView" class="col-md-8">
+                                    <h4 class="tag-group">
+                                        <a onclick="colabInBox('People are collaborating  ')">
+                                            <span class=" label label-primary">Collaboration</span>
+                                        </a>
+                                        <a onclick="colabInBox('People are Communicating  ')">
+                                            <span class="label label-primary">Communication</span>
+                                        </a>
+                                        <a onclick="colabInBox('People are doing work individually ')">
+                                            <span class="label label-primary">Individually</span>
+                                        </a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="controlbtns">
+
+                        <button data-intro="Click here to show adjustable elements related to distance information, and to find when specific distance related events (e.g. people are close to each other.) happen in the video."
+                                data-step="5" data-position="top" id="distance" type="button" onclick="Distance()"
+                                class="btn btn-success" disabled="true">
+                            Distance
+                        </button>
+                        <button data-intro="Click here to show adjustable elements related to orientation information, and to find when people face at a specific angle in the video."
+                                data-step="6" data-position="top" id="orientation" type="button" onclick="Orientation()"
+                                class="btn btn-warning" disabled="true">
+                            Orientation
+                        </button>
+                        <button data-intro="Click here to show element related to location information. Drag and draw on the frame to select a specific area on which anyone in the video is located."
+                                data-step="7" data-position="top" id="location" type="button" onclick="Location()"
+                                class="btn btn-danger" disabled="true">
+                            Location
+                        </button>
+                        <button data-intro="Click it to show selectable activity elements, and to find when anyone in the video is doing a specific activity."
+                                data-step="8" data-position="top" id="motion" type="button" onclick="Motion()"
+                                class="btn btn-info" disabled="true">
+                            Activity
+                        </button>
+
+                        <button data-intro="Click here to start searching events in the video based on your queries."
+                                data-step="11" data-position="top" id="runQuery" type="button"
+                                style="margin-left: 120px" class="btn btn-default" disabled="true"
+                                onclick="showtimeline()">Search in video
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+-->
+    </div>
+
+
+
+</div>
+<!--<script src="javascripts/query.js"></script>-->
+
+<!--<a href="http://www.freepik.com/free-vector/ink-stains-texture_765582.htm">Designed by Freepik</a>-->
+</body>
+</html>

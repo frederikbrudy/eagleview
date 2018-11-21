@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--   <link rel="icon" href="../../favicon.ico"> -->
+    <title>EagleView Query</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="js/vis/dist/vis.js"></script>
+    <link href="js/vis/dist/vis.css" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+    <link href="https://cdn.jsdelivr.net/intro.js/2.5.0/introjs.min.css" rel="stylesheet">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
+    <script src="https://code.createjs.com/preloadjs-0.6.2.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+
+    <!-- styles needed by jScrollPane - include in your own sites -->
+    <link type="text/css" href="style/jquery.jscrollpane.css" rel="stylesheet" media="all" />
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>-->
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css" rel="stylesheet" type="text/css" />-->
+
+    <style>
+        html {
+            width: 900px;
+            /* margin-left: 50px;*/
+            align-content: center;
+            box-sizing: content-box;
+        }
+
+        body {
+            /*margin: auto;*/
+        }
+
+        #canvas {
+            margin-right: 10px;
+            border: 3px solid #534E51;
+        }
+
+        #myCanvas {
+            border: 3px dotted #534E51;
+            z-index: 1;
+            /*opacity:0.2;*/
+        }
+
+        #animation {
+            height: 482px;
+            width: 1200px;
+            margin-top: 10px;
+            margin-left: 70px;
+        }
+
+        #videos {
+            margin-top: 10px;
+            margin-right: 60px;
+            width: 1250px;
+            margin-left: 62px;
+            /*position: relative;
+            top: -100px;*/
+        }
+
+        #video_1 {
+            margin-top: 2px;
+            margin-right: 12px;
+        }
+
+        #video1 {
+            border: 1px solid black;
+            padding: 2px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            margin-right: 2px;
+        }
+
+        #controlbtns {
+            /* align-content: left;*/
+
+            margin-left: -40px;
+            margin-top: 10px;
+        }
+
+        #inforTab {
+            align-content: left;
+            height: 222px;
+            margin-top: 10px;
+            margin-right: 48px;
+            padding-top: 10px;
+            margin-left: -40px;
+            padding-left: 10px;
+            padding-right: 20px;
+            border: 1px #DDDDDD solid;
+        }
+
+        #tabCon {
+            padding-left: 10px;
+            padding-top: 10px;
+        }
+
+        .scroll-pane {
+            width: 200%;
+            height: 150px;
+            overflow: auto;
+        }
+
+        #opacityS {
+            padding-top: 5px;
+        }
+
+        #mysc {
+            border: 1px solid black;
+        }
+
+        #btnLayer {
+            width: 582px;
+            height: 482px;
+            position: relative;
+            background-color: #00000000;
+            top: -487.5px;
+            right: -588.5px;
+            z-index: 3;
+        }
+
+        #cycLayer {
+            position: relative;
+            background-color: #00000000;
+            top: -970px;
+            right: -588.5px;
+            z-index: 2;
+        }
+
+        #checkDraw {
+            opacity: 0;
+        }
+
+        #recordView {
+            height: 100px;
+            float: left;
+            overflow: auto;
+        }
+
+        .floating-menu {
+            font-family: sans-serif;
+            background: #5EB3EF;
+            padding: 5px;;
+            width: 10vw;
+            z-index: 100;
+            position: fixed;
+            bottom: 560px;
+            left: 90%;
+        }
+
+        .j {
+            font-family: sans-serif;
+
+            width: 12vw;
+            z-index: 100;
+            position: fixed;
+            overflow-y: auto;
+            bottom: 280px;
+            left: 90%;
+
+            display: none;
+        }
+
+
+        .floating-menu a{
+            font-size: 1.2em;
+            display: block;
+            margin: 0 0.5em;
+            color: white;
+        }
+        .floating-menu h3 {
+            font-size: 1.8em;
+            display: block;
+            margin: 0 0.5em;
+            color: white;
+        }
+
+        #timeline2{
+            width: 1170px;
+            margin-top: 20px;
+            border: 1px solid black;
+            padding: 10px;
+            margin-left:70px;
+        }
+        #timeline{
+            width: 1170px;
+            margin-top: 20px;
+            border: 1px solid black;
+            margin-left:70px;
+            padding: 10px;
+        }
+
+        .vis-item.Tdistance{
+            background-color: #5CB85B;
+            color: white;
+        }
+        .vis-item.Torientation{
+            background-color: #F0AD4E;
+            color: white;
+        }
+
+        .vis-item.Tmotion{
+            background-color: #56BED7;
+            color: white;
+        }
+
+        .vis-item.Tlocation{
+            background-color: #D9534F;
+            color: white;
+        }
+
+        .menu {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 10px;
+            z-index: 9999;
+        }
+        #timeline {
+            position: relative;
+        }
+        #progress {
+            width: 522px;
+        }
+
+        #progress #progress_box {
+            float: left;
+            width: 522px;
+            height: 9px;
+            border: 1px solid #ccc;
+            background-color: #A39CA7;
+            margin: 10px 20px 0 -5px;
+            overflow: hidden;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+        }
+
+        #progress #play_progress {
+            display: block;
+            width: 0;
+            height: 9px;
+            background-color: #56BED7;
+            opacity:0.7;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+        }
+
+        #progress #load_progress {
+            display: block;
+            width: 0;
+            height: 9px;
+            background-color: #ccc;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+        }
+
+        #progress #play_time {
+            float: left;
+            margin: 7px 0 0 -5px;
+            width: 512px;
+        }
+
+    </style>
+</head>
+
+<body onload="init()">
+<!--  <h2>EagleViewQuery</h2> -->
+
+<div style="margin-left: 600px; margin-bottom:-20px" id="checkDraw">
+    <input type="radio" name="action" value="draw" style="opacity:0" checked> Draw
+    <input type="radio" name="action" value="erase" id="erase" style="opacity:0">
+</div>
+
+<div id="commentViewFloat" class="j">
+    <div class="col-md-6 " >
+        <h4 class="tag-group">
+            <a  onclick="colabInBox('People are collaborating')">
+                <span style="padding-bottom: 2px" class="label label-primary ">Collaboration</span>
+            </a>
+
+            <a  onclick="colabInBox('People are communicating')">
+                <span style="padding-bottom: 2px" class="label label-primary">Communication</span>
+            </a>
+            <a  onclick="colabInBox('People are doing work individually')">
+                <span style="padding-bottom: 2px" class="label label-primary">Individually</span>
+            </a>
+        </h4>
+        <textarea name="commentsfloat" placeholder="Write your comment here!" id="commentsfloat" cols="16" rows="6">
+            </textarea>
+
+        <button type="button" onclick="submitCmntFloating()">Add</button>
+        <button type="button" onclick="resetCmntFloating()">Reset</button>
+    </div>
+</div>
+
+<nav data-intro="In this floating menu, you can jump between video and timelines interface by clicking 'Video' or 'Timeline'. You can also add your annotations with 'Annotation'" data-step="13"  data-position="left"  class="floating-menu">
+    <h3>Menu</h3>
+    <a href="#animation">Video</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#false" class="commentBox" data-intro="Click here to add annotations by typing your own words in the text box or add directly by clicking the provided tags." data-step="14"  onclick="hideFunction()">Annotation</a>
+    <a class="glyphicon glyphicon-question-sign" href="javascript:void(0);" onclick="javascript:introJs().start();"> Help </a>
+
+</nav>
+
+<div id="animation">
+    <video data-intro="Here is your video." data-step="1" id="video1" width="582" preload="auto">
+        <source src="videos/vone.mp4" type="video/mp4">
+        Your browser doesn't support HTML5 video tag.
+    </video>
+    <canvas data-intro="Once you pause the video, the current video frame is captured here! You can create  queries by adjusting elements on it later." data-step="4"  id="myCanvas" width="582" height="482">Your browser does not support canvas, please try another browser
+    </canvas>
+    <div id="btnLayer"></div>
+    <canvas data-intro="Remember your queries related to distance, orientation, location, and activity will be generated by your operations on elements here!" data-step="9"  id="cycLayer" width="582" height="482">Your browser does not support canvas, please try another browser</canvas>
+</div>
+
+<div id="videos" class="row">
+    <div class="col-md-6">
+        <div data-intro="Now let's start!" data-step="15" class="row">
+            <div class="col-md-1"><button data-intro="Click here to play videos and click again to pause." data-step="2" data-position="top" id="pausecontrol" onclick="Pause()" class="btn btn-primary"><i class="glyphicon glyphicon-play" ></i></button></div>
+            <div class="col-md-11"><div data-intro="Slide the slider here to adjust video time." data-step="3" data-position="top" id="progress" class="control">
+                <div id="progress_box">
+                    <span id="load_progress"><span id="play_progress"></span></span>
+                </div>
+                <div id="play_time">
+                    <span id="current_time_display">00:00</span> / <span id="duration_display"></span>
+                </div>
+            </div></div>
+        </div>
+        <video id="video_1" width="280" preload="auto" class="video">
+            <source src="videos/vtwo.mp4" type="video/mp4">
+            Your browser doesn't support HTML5 video tag.
+        </video>
+        <video id="video_2" width="280" preload="auto" class="video">
+            <source src="videos/vthree.mp4" type="video/mp4">
+            Your browser doesn't support HTML5 video tag.
+        </video>
+    </div>
+
+
+    <div class="col-md-6">
+
+        <div id="inforTab">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#infoView">Information</a></li>
+                <li ><a data-toggle="tab" href="#queryView">Query</a></li>
+                <li><a data-toggle="tab" href="#commentView">Annotations</a></li>
+                <div id="opacityS" , class="row">
+                    <div class=" col-md-3">
+                        <input type="range" min="0" max="100" value="50" step="1" onchange="storeValue(this.value)" />
+                    </div>
+                    <div class="col-md-3">
+                        <span id="range" style="colour:#4C4C4C; font-size: 90%; margin-left: 0px">Opacity: 50 %</span>
+                    </div>
+                </div>
+            </ul>
+
+            <div  id="tabCon" class="tab-content">
+                <div data-intro="Once you finish operation of any function, you will get one corresponding query here!" data-step="10" data-position="top" id="infoView" class=" tab-pane fade in active">
+                    <div class="scroll-pane">
+                        <p id="showinfo"> </p>
+                    </div>
+                </div>
+
+                <div  id="queryView" class="tab-pane fade, scroll-pane"></div>
+
+                <!-- <form> -->
+                <div id="commentView" class="tab-pane fade">
+                    <div class="col-md-4" align="left">
+                        <textarea name="comments" placeholder="Write your comment here!" id="comments" cols="19" rows="4"></textarea>
+                        <button type="button" onclick="submitCmnt()">Add</button>
+                        <button type="button" onclick="resetCmnt()">Reset</button>
+                    </div>
+
+                    <div id="recordView" class="col-md-8">
+                        <h4 class="tag-group">
+                            <a  onclick="colabInBox('People are collaborating  ')">
+                                <span  class=" label label-primary">Collaboration</span>
+                            </a>
+                            <a  onclick="colabInBox('People are Communicating  ')">
+                                <span class="label label-primary">Communication</span>
+                            </a>
+                            <a  onclick="colabInBox('People are doing work individually ')">
+                                <span class="label label-primary">Individually</span>
+                            </a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div   id="controlbtns">
+
+            <!-- <input type="range" min="0" max="100" value="0" step="1" onchange="storeValue(this.value)" /> -->
+            <!-- <input id="range" type="range" min="0" max="100" value="0" step="1" onchange="storeValue(this.value)"/> -->
+            <!-- 	  <button id="movecontrol" onclick="runmove()" type="button" class="btn btn-primary">Start</button> -->
+
+            <button data-intro="Click here to show adjustable elements related to distance information, and to find when specific distance related events (e.g. people are close to each other.) happen in the video." data-step="5" data-position="top" id="distance" type="button" onclick="Distance()" class="btn btn-success" disabled="true">Distance</button>
+            <button data-intro="Click here to show adjustable elements related to orientation information, and to find when people face at a specific angle in the video." data-step="6" data-position="top"  id="orientation" type="button" onclick="Orientation()" class="btn btn-warning" disabled="true">Orientation</button>
+            <button data-intro="Click here to show element related to location information. Drag and draw on the frame to select a specific area on which anyone in the video is located." data-step="7" data-position="top" id="location" type="button" onclick="Location()" class="btn btn-danger" disabled="true">Location</button>
+            <button data-intro="Click it to show selectable activity elements, and to find when anyone in the video is doing a specific activity." data-step="8" data-position="top" id="motion" type="button" onclick="Motion()" class="btn btn-info" disabled="true">Activity</button>
+
+            <button data-intro="Click here to start searching events in the video based on your queries." data-step="11" data-position="top" id="runQuery" type="button" style="margin-left: 120px" class="btn btn-default" disabled="true" onclick="showtimeline()">Search in video</button>
+
+
+        </div>
+    </div>
+</div>
+
+<div  data-intro="Filterd results are shown here! You can find when the matched events of you queries happen in the video." data-step="12" data-position="top"  id="timeline">
+
+    <div class="row">
+        <div class="col-md-2">
+            <h2>Timeline </h2>
+        </div>
+        <button style="margin-left: -40px;margin-top: 28px;" onclick="showAllGroups()">Restore Delete</button>
+
+
+
+
+
+    </div>
+    <!-- <div class="menu">
+              <input type="button" id="zoomIn" value="Zoom in"/>
+              <input type="button" id="zoomOut" value="Zoom out"/>
+              <input type="button" id="moveLeft" value="Move left"/>
+              <input type="button" id="moveRight" value="Move right"/>
+      </div> -->
+</div>
+
+<div  id="timeline2">
+    <h2 >Annotation TimeLine</h2>
+</div>
+
+
+<script src="js/moment.js"></script>
+<script src="js/eagleview.js"> </script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/intro.js/2.5.0/intro.min.js"></script>
+</body>
+
+</html>

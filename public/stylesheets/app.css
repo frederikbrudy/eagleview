@@ -1,0 +1,171 @@
+@media (min-width: 1300px) {
+  .container {
+    width: 1300px;
+  }
+}
+.container {
+  margin-top: 10px;
+}
+#easel {
+  float: left;
+  border: 1px solid black;
+  margin-bottom: 10px;
+  z-index: 0;
+}
+#overlay {
+  width: 512px;
+  height: 424px;
+  z-index: 1;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+#traceOverlay {
+  position: absolute;
+  left: 15px;
+  top: 0px;
+  z-index: 2;
+}
+#videoOverlay,
+#videoOverlay2 {
+  position: absolute;
+  left: 15px;
+  top: 0px;
+  z-index: -1;
+  object-fit: fill;
+  opacity: 1;
+}
+.overview p,
+.trace p {
+  padding-left: 8px;
+}
+.overviewImage,
+.traceImage {
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  width: 153px;
+  height: 127px;
+  border: 1px solid black;
+}
+.overviewImage.active,
+.traceImage.active {
+  border: 3px solid #337ab7;
+}
+.mainVideo {
+  width: 515px;
+  float: left;
+  margin-right: 15px;
+}
+.subVideo {
+  width: 320px;
+  float: left;
+  margin-right: 17px;
+}
+.panel {
+  width: 400px;
+  border: 1px solid;
+  padding: 10 30 10 30;
+  float: left;
+}
+.preferences {
+  padding: 10;
+}
+.subGroup {
+  padding-left: 10px;
+}
+#seekbar .slider-handle {
+  background: #4285f4;
+}
+#seekbar .slider-selection {
+  background: #4285f4;
+}
+#seekbar .slider-track-high {
+  background: #5a5a5a;
+}
+#seekbar .slider-track {
+  height: 4;
+  width: 100%;
+  margin-top: -2;
+  top: 50%;
+  left: 0;
+}
+#seekbar {
+  width: 100%;
+}
+video {
+  border: 1px solid white;
+  background-color: black;
+}
+.heatmapSliderDiv {
+  padding-left: 25px;
+  width: 100%;
+}
+.heatmapSliderDiv .slider {
+  margin-right: 15px;
+  width: 230px ;
+}
+.heatmapSliderDiv .slider-track-low,
+.heatmapSliderDiv .slider-track-high {
+  background: #C0C0C0;
+}
+.heatmapSliderDiv .slider-selection {
+  background: #84c4e4;
+}
+#backgroundOpacitySliderCss {
+  width: 180px;
+}
+#videoSeekBarCss {
+  margin-left: 15px;
+  width: 430px;
+}
+#videoSeekBarCss .slider-selection {
+  background: #999999;
+}
+#videoSeekBarCss .slider-handle {
+  background: #333333;
+}
+#videoPlayButton {
+  width: 62px;
+}
+#videoPlayButtonRow {
+  margin-top: 10px;
+}
+.checkbox {
+  margin: 0;
+}
+.nav.nav-tabs {
+  background: black !important;
+}
+.nav.nav-tabs.main {
+  padding: 5px 5px 0 5px;
+}
+.nav.nav-tabs li {
+  background: lightgray;
+}
+.nav.nav-tabs li a {
+  color: black;
+}
+.annotate {
+  position: relative;
+  top: -275px;
+  left: 100%;
+  width: 50px;
+}
+.annotate .label {
+  display: inline-block;
+  margin-top: 0.5em;
+}
+.lastrow {
+  margin-top: -258px;
+}
+#query-frame {
+  width: 100%;
+  height: 1500px;
+  border: none;
+}
+/*# sourceMappingURL=app.css.map */

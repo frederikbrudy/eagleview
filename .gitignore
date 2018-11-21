@@ -1,0 +1,11 @@
+# Ignore list for Eagle, a PCB layout tool
+
+/node_modules
+npm-debug.log
+/public/videos/*
+
+/.idea
+/public/data
+/public/query/videos
+/public/query/newData.json
+/public/query/newData2.json

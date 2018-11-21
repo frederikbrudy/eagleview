@@ -1,0 +1,289 @@
+<html>
+  <head>
+      <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="javascripts/bootstrap-colorpicker/css/bootstrap-colorpicker.css">
+    <link rel="stylesheet" href="javascripts/bootstrap-slider/bootstrap-slider.css">
+    <link rel="stylesheet" href="stylesheets/app.less">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/css/bootstrap-slider.min.css">-->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/bootstrap-slider.min.js"></script>-->
+    <script src="javascripts/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+    <script src="javascripts/bootstrap-slider/bootstrap-slider.js"></script>
+    <script src="javascripts/easeljs-0.8.2.min.js"></script>
+    <script src="javascripts/heatmap.js"></script>
+    <script src="javascripts/jquery.slimscroll.min.js"></script>
+    <script src="javascripts/app2.js"></script>
+    
+  </head>
+  <body onload="loadData(1);">
+    <div class="container">
+    <div class="row text-center all" id="loadingIcon">Now Loading...</div>
+      <div class="row">
+        <div class="mainVideo">
+	          <div class="row">
+	          	<div class="col-lg-12">
+			        <video width="512" height="424" id="videoOverlay" >
+			            <source src="videos/102_top_grey_trim.mp4" type="video/mp4">
+			          	Your browser does not support the video tag.
+			        </video>
+			        <!--<video width="512" height="424" id="videoOverlay2" >
+			            <source src="videos/200_eagle.mp4" type="video/mp4">
+			          	Your browser does not support the video tag.
+			        </video>-->
+		          	<canvas id="easel" width="512" height="424"></canvas>
+		          	<canvas id="traceOverlay" width="511" height="423"></canvas>
+		          	<div id="overlay"></div>
+	          	</div>
+	          </div>
+	          <div class="row">
+	          	<div class="col-lg-12">
+	            <span id="frameBox">Frame: <br></span>
+	            Time: <span id="timeBox"></span><br>
+	            <div class="row" id="videoPlayButtonRow">
+	            	<div class="col-lg-12">
+			            <button type="button" class="btn btn-default btn-sm btn-danger" id="videoPlayButton">Play</button>
+			            <input type="hidden" id="videoPlayButtonStatus" value="clickToPlay">
+			            <input type="text" id="videoSeekBar" data-slider-tooltip="hide" data-slider-handle="square">
+		            </div>
+	            </div>
+	            </div>
+	          </div>
+        </div>
+        <div class="subVideo">
+	          <video width="320" height="180" id="video1" >
+	            <source src="videos/102_top_color.mp4" type="video/mp4">
+	          Your browser does not support the video tag.
+	          </video>
+	          <video width="320" height="180" id="video2" >
+	            <source src="videos/102_side.mp4" type="video/mp4">
+	          Your browser does not support the video tag.
+	          </video>
+	          <video width="320" height="180" id="video3" >
+	            <source src="videos/102_top_depth.mp4" type="video/mp4">
+	          Your browser does not support the video tag.
+	          </video>
+        </div>
+        <div class="panel">
+    		<div class="row">
+	        	<ul class="nav nav-tabs nav-justified">
+	        		<li class="active" id="preferencesPill"><a href="#">Preferences</a></li>
+	        		<li id="summaryViewPill"><a href="#">Summary view</a></li>
+	          	</ul>
+    		</div>
+    		<div class="row">
+	          	<form id="preferences">
+	          		<h4>Overlay</h4>
+      				<div class="row checkbox">
+					  <label>
+					    <input type="checkbox" id="videoOverylayCheckbox">Show background video
+					  </label>
+					</div>
+	          		<div class="row">
+						<div class="col-lg-6" style="padding-left:35px">
+							Opacity: <span id="opacityLabel">100</span>%
+						</div>
+						<div class="col-lg-6">
+			          		<input id="backgroundOpacitySlider" type="text" data-slider-step="5">
+		          		</div>
+					</div>
+						<!--
+          				<div class="checkbox">
+						  <label>
+						    <input type="checkbox" id="videoOverylayCheckbox2">Show background proxemic video
+						  </label>
+						</div>-->
+          				<div class="checkbox">
+						  <label>
+						    <input type="checkbox" id="zoneOverlayCheckbox">Show zones
+						  </label>
+						</div>
+		            <h4>Distance</h4>
+		            <div class="row">
+		              <div class="col-sm-7">Person's sight angle (degree)</div>
+		              <div class="col-sm-5">
+		                <input type="text" class="form-control" id="inputSightAngle" placeholder="90">
+		              </div>
+		            </div>
+		            <div class="row">
+		              <div class="col-sm-7">Proxemics distance around body radius (cm)</div>
+		              <div class="col-sm-5">
+		                <input type="text" class="form-control" id="inputBodyProxemicDistance" placeholder="100">
+		              </div>
+		            </div>
+		            <div class="row">
+		              <div class="col-sm-4">Show distance line between</div>
+		              <div class="col-sm-4">
+		                <select class="form-control selectDistanceLine" id="distanceLine1From" data-id="0" data-type="from">
+		                  <option value="select">Select</option>
+		                  <option value="0" type="person">Person 1</option>
+		                  <option value="1" type="person">Person 2</option>
+		                  <option value="100" type="object">TV</option>
+		                </select>
+		              </div>
+		              <div class="col-sm-4">
+		                <select class="form-control selectDistanceLine" id="distanceLine1To" data-id="0" data-type="to">
+		                  <option value="select">Select</option>
+		                  <option value="0" type="person">Person 1</option>
+		                  <option value="1" type="person">Person 2</option>
+		                  <option value="100" type="object">TV</option>
+		                </select>
+		              </div>
+		            </div>
+		            <div class="row" id="distanceLine2">
+		              <div class="col-sm-4">Show distance line between</div>
+		              <div class="col-sm-4">
+		                <select class="form-control selectDistanceLine" id="distanceLine2From" data-id="1" data-type="from">
+		                  <option value="select">Select</option>
+		                  <option value="0" type="person">Person 1</option>
+		                  <option value="1" type="person">Person 2</option>
+		                  <option value="100" type="object">TV</option>
+		                </select>
+		              </div>
+		              <div class="col-sm-4">
+		                <select class="form-control selectDistanceLine" id="distanceLine2To" data-id="1" data-type="to">
+		                  <option value="select">Select</option>
+		                  <option value="0" type="person">Person 1</option>
+		                  <option value="1" type="person">Person 2</option>
+		                  <option value="100" type="object">TV</option>
+		                </select>
+		              </div>
+		            </div>
+		            <div class="row" id="distanceLine3">
+		              <div class="col-sm-4">Show distance line between</div>
+		              <div class="col-sm-4">
+		                <select class="form-control selectDistanceLine" id="distanceLine3From" data-id="2" data-type="from">
+		                  <option value="select">Select</option>
+		                  <option value="0" type="person">Person 1</option>
+		                  <option value="1" type="person">Person 2</option>
+		                  <option value="100" type="object">TV</option>
+		                </select>
+		              </div>
+		              <div class="col-sm-4">
+		                <select class="form-control selectDistanceLine" id="distanceLine3To" data-id="2" data-type="to">
+		                  <option value="select">Select</option>
+		                  <option value="0" type="person">Person 1</option>
+		                  <option value="1" type="person">Person 2</option>
+		                  <option value="100" type="object">TV</option>
+		                </select>
+		              </div>
+		            </div>
+		            <h4>Movement</h4>
+		            <div class="row">
+		              <div class="col-sm-7">Show past movement for (secs)</div>
+		              <div class="col-sm-5">
+		                <input type="text" class="form-control" id="inputBackwardMovementSeconds" placeholder="0">
+		              </div>
+		            </div>
+		            <div class="row">
+		              <div class="col-sm-7">Show future movement for (secs)</div>
+		              <div class="col-sm-5">
+		                <input type="text" class="form-control" id="inputForwardMovementSeconds" placeholder="3">
+		              </div>
+		            </div>
+		            <h5>Person 1</h5>
+		            <div class="row subGroup">
+		              <div class="col-sm-7">Past movement color</div>
+		              <div class="col-sm-5">
+		                <div class="input-group colorpicker-component">
+		                <input type="text" class="form-control" id="person1BackwardMovementColor" value="#000000"><span class="input-group-addon"><i></i>
+		                </span>
+		                </div>
+		              </div>
+		            </div>
+		            <div class="row subGroup">
+		              <div class="col-sm-7">Future movement color</div>
+		              <div class="col-sm-5">
+		                <div class="input-group colorpicker-component">
+		                <input type="text" class="form-control" id="person1ForwardMovementColor" value="#000000"><span class="input-group-addon"><i></i>
+		                </span>
+		                </div>
+		              </div>
+		            </div>
+		            <h5>Person 2</h5>
+		            <div class="row subGroup">
+		              <div class="col-sm-7">Past movement color</div>
+		              <div class="col-sm-5">
+		                <div class="input-group colorpicker-component">
+		                  <input type="text" class="form-control" id="person2BackwardMovementColor" value="#000000"><span class="input-group-addon"><i></i></span>
+		                </div>
+		              </div>
+		            </div>
+		            <div class="row subGroup">
+		              <div class="col-sm-7">Future movement color</div>
+		              <div class="col-sm-5">
+		                <div class="input-group colorpicker-component">
+		                  <input type="text" class="form-control" id="person2ForwardMovementColor" value="#000000"><span class="input-group-addon"><i></i></span>
+		                </div>
+		              </div>
+		            </div>
+		            <h4>Groups</h4>
+		            <div class="row">
+		              <div class="col-sm-7">Group 1 color</div>
+		              <div class="col-sm-5">
+		                <div class="input-group colorpicker-component">
+		                  <input type="text" class="form-control" id="group1Color" value="#000000"><span class="input-group-addon"><i></i></span>
+		                </div>
+		              </div>
+		            </div>
+		            <div class="row">
+		              <div class="col-sm-7">Group 2 color</div>
+		              <div class="col-sm-5">
+		                <div class="input-group colorpicker-component">
+		                  <input type="text" class="form-control" id="group2Color" value="#000000"><span class="input-group-addon"><i></i></span>
+		                </div>
+		              </div>
+		            </div>
+	          	</form>
+	          	<form id="summaryView">
+	          		<h4>Select time interval</h4>
+		          		<div class="row heatmapSliderDiv">
+			          		<input id="positionHeatMapSlider" type="text" data-slider-tooltip="hide">
+			          		<span id="heatmapStartTime">0:00</span> - <span id="heatmapEndTime">1:10</span>
+		          		</div>
+	          		<h4>Position Heat Map</h4>
+	          		<div class="row">
+		          		<div class="col-md-6">
+					        <a href="#" class="overview" data-person-id="0" onclick="return false;">
+					        	<div class="overviewImage" id="heatSample"></div>
+					        	<p class="overviewText">Person 1</p>
+				        	</a>
+				        </div>
+		          		<div class="col-md-6">
+					        <a href="#" class="overview" data-person-id="1" onclick="return false;">
+					        	<div class="overviewImage" id="heatSample2"></div>
+					        	<p class="overviewText">Person 2</p>
+					        </a>
+				        </div>
+				        </div>
+	          		<h4>Movement Trace</h4>
+	          		<div class="row">
+		          		<div class="col-md-6">
+					        <a href="#" class="trace" data-person-id="0" onclick="return false;">
+						        <canvas id="traceSample1" class="traceImage" width="153" height="127"></canvas>
+					        	<p class="traceText">Person 1</p>
+				        	</a>
+				        </div>
+		          		<div class="col-md-6">
+					        <a href="#" class="trace" data-person-id="1" onclick="return false;">
+						        <canvas id="traceSample2" class="traceImage" width="153" height="127"></canvas>
+					        	<p class="traceText">Person 2</p>
+					        </a>
+				        </div>
+			        </div>
+	          	</form>
+          	</div>
+        </div>
+      </div>
+    </div>
+    <form>
+</form>
+    <!--<a href="http://www.freepik.com/free-vector/ink-stains-texture_765582.htm">Designed by Freepik</a>-->
+  </body>
+</html>
